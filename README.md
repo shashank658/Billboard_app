@@ -15,11 +15,19 @@ cp .env.example .env
 | Variable | Description |
 | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Public base URL for the app (used in UI) |
+| `DATABASE_URL` | Neon Postgres connection string |
 
 ## Development
 ```
 npm install
 npm run dev
+```
+
+## Database (Drizzle + Neon)
+```
+npm run db:generate
+npm run db:migrate
+npm run db:seed
 ```
 
 ## Build
