@@ -13,8 +13,7 @@ export default function SignInPage() {
             colorInputText: "hsl(224 22% 12%)",
           },
         }}
-        path="/sign-in"
-        routing="path"
+        routing="hash"
       />
       <p className="text-center text-xs text-muted-foreground">
         If you need access, ask an admin to invite you.
