@@ -13,7 +13,9 @@ export default function SignInPage() {
             colorInputText: "hsl(224 22% 12%)",
           },
         }}
-        routing="hash"
+        routing="path"
+        afterSignInUrl="/dashboard"
+        afterSignUpUrl="/dashboard"
       />
       <p className="text-center text-xs text-muted-foreground">
         If you need access, ask an admin to invite you.
