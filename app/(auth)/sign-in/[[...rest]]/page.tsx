@@ -13,7 +13,7 @@ export default function SignInPage() {
             colorInputText: "hsl(224 22% 12%)",
           },
         }}
-        routing="path"
+        routing="hash"
         afterSignInUrl="/dashboard"
         afterSignUpUrl="/dashboard"
       />
