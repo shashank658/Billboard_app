@@ -1,4 +1,12 @@
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const { userId } = auth();
+  if (userId) {
+    redirect("/dashboard");
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
       <div className="w-full max-w-md rounded-3xl border bg-white/90 p-8 shadow-glow backdrop-blur">

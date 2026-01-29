@@ -1,7 +1,12 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { attachClerkUserId, findUserByClerkId, findUserByEmail } from "@/lib/data-access/users";
+import {
+  attachClerkUserId,
+  findUserByClerkId,
+  findUserByEmail,
+  findUserByEmailInsensitive,
+} from "@/lib/data-access/users";
 
 export const requireActiveUser = async () => {
   const { userId } = auth();
@@ -9,7 +14,8 @@ export const requireActiveUser = async () => {
     redirect("/sign-in");
   }
 
-  const clerkUser = await clerkClient.users.getUser(userId);
+  const client = await clerkClient();
+  const clerkUser = await client.users.getUser(userId);
 
   let dbUser = await findUserByClerkId(userId);
 
@@ -18,9 +24,11 @@ export const requireActiveUser = async () => {
     const primaryEmail =
       clerkUser.emailAddresses.find((email) => email.id === primaryEmailId)?.emailAddress ??
       clerkUser.emailAddresses[0]?.emailAddress;
-    const normalizedEmail = primaryEmail?.toLowerCase();
+    const normalizedEmail = primaryEmail?.trim().toLowerCase();
     if (normalizedEmail) {
-      const matched = await findUserByEmail(normalizedEmail);
+      const matched =
+        (await findUserByEmail(normalizedEmail)) ??
+        (await findUserByEmailInsensitive(normalizedEmail));
       if (matched) {
         dbUser = await attachClerkUserId({ userId: matched.id, clerkUserId: userId });
       }

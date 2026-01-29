@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
@@ -15,10 +15,21 @@ export const listUsers = async (conn: DbClient = db) => {
 };
 
 export const findUserByEmail = async (email: string, conn: DbClient = db) => {
+  const normalized = email.trim().toLowerCase();
   return conn
     .select()
     .from(users)
-    .where(and(eq(users.email, email), isNull(users.deletedAt)))
+    .where(and(eq(users.email, normalized), isNull(users.deletedAt)))
+    .limit(1)
+    .then((rows) => rows[0] ?? null);
+};
+
+export const findUserByEmailInsensitive = async (email: string, conn: DbClient = db) => {
+  const normalized = email.trim().toLowerCase();
+  return conn
+    .select()
+    .from(users)
+    .where(and(eq(sql<string>`lower(${users.email})`, normalized), isNull(users.deletedAt)))
     .limit(1)
     .then((rows) => rows[0] ?? null);
 };
